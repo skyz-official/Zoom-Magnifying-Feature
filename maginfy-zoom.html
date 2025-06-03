@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-----META LINKS------->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-----BOOTSTRAP 5 CDN LINKS------->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-----FONT AWESOME CDN LINK------->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <title>SHOPING PAGE</title>
+    <style>
+        .img-zoom-container {
+  position: relative;
+}
+
+.img-zoom-result {
+  border: 1px solid #d4d4d4;
+  width: 400px;
+  height: 400px;
+  position: absolute;
+  top: 0;
+  left: 420px;
+  background-repeat: no-repeat;
+  background-size: 800px 800px; 
+}
+.img-zoom-lens {
+  position: absolute;
+  border: 1px solid #000;
+  width: 100px;
+  height: 100px;
+  opacity: 0.4;
+  background-color: #fff;
+  cursor: crosshair;
+}
+
+    </style>
+</head>
+<body>
+<div class="img-zoom-container">
+  <img id="mainImg" src="pic 2.webp" width="400" alt="Product" />
+  <div id="zoomResult" class="img-zoom-result"></div>
+</div>
+
+
+
+<script>
+    function imageZoom(imgID, resultID) {
+  const img = document.getElementById(imgID);
+  const result = document.getElementById(resultID);
+
+  const lens = document.createElement("DIV");
+  lens.setAttribute("class", "img-zoom-lens");
+  img.parentElement.insertBefore(lens, img);
+
+  const cx = result.offsetWidth / lens.offsetWidth;
+  const cy = result.offsetHeight / lens.offsetHeight;
+
+  result.style.backgroundImage = `url('${img.src}')`;
+  result.style.backgroundSize = `${img.width * cx}px ${img.height * cy}px`;
+
+  lens.addEventListener("mousemove", moveLens);
+  img.addEventListener("mousemove", moveLens);
+
+  function moveLens(e) {
+    e.preventDefault();
+    const pos = getCursorPos(e);
+    let x = pos.x - lens.offsetWidth / 2;
+    let y = pos.y - lens.offsetHeight / 2;
+
+    if (x > img.width - lens.offsetWidth) x = img.width - lens.offsetWidth;
+    if (x < 0) x = 0;
+    if (y > img.height - lens.offsetHeight) y = img.height - lens.offsetHeight;
+    if (y < 0) y = 0;
+
+    lens.style.left = x + "px";
+    lens.style.top = y + "px";
+
+    result.style.backgroundPosition = `-${x * cx}px -${y * cy}px`;
+  }
+
+  function getCursorPos(e) {
+    const a = img.getBoundingClientRect();
+    const x = e.pageX - a.left - window.pageXOffset;
+    const y = e.pageY - a.top - window.pageYOffset;
+    return { x, y };
+  }
+}
+
+window.onload = () => imageZoom("mainImg", "zoomResult");
+
+
+
+</script>
+</body>
+</html>
